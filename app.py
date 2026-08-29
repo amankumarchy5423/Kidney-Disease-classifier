@@ -1,3 +1,3 @@
-from src.amanClassifier import logger
+from src.amanClassifier.loging.logger import logger
 
-logger.info ("welcome to aman project ")
+logger.info("welcome to aman project")

@@ -7,7 +7,10 @@ from datetime import datetime
 logging_str = "[%(asctime)s: %(levelname)s: %(module)s: %(message)s]"
 
 log_dir = "log"
-log_file_path = os.path.join(log_dir , f'running_logs{datetime.now().strftime("%d/%m/%Y, %H:%M:%S")}.log')
+log_file_path = os.path.join(
+    log_dir,
+    f'running_logs_{datetime.now().strftime("%d_%m_%Y_%H_%M_%S")}.log'
+)
 os.makedirs(log_dir , exist_ok = True)
 
 logging.basicConfig(
