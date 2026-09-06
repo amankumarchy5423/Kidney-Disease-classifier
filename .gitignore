@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 # Virtual environment
 .venv/
-
 # Dataset
 Data/
 research/archive/
