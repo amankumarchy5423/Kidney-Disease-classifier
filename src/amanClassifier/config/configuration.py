@@ -1,2 +1,65 @@
-# from cl
+import os
+import sys
 
+from src.amanClassifier.constants import *
+from src.amanClassifier.logging.logger import logger
+
+
+
+
+class DataIngestionConfig:
+    def __init__(self):
+        try:
+            self.Data_file_path = DATA_FILE_PATH
+            self.allowed_extensions = {".jpg", ".jpeg", ".png"}
+            self.img_size = (28, 28)
+
+        except Exception as e :
+            logger.info(e)
+            raise e
+        
+# class DataValidationConfig:
+#     def __init__(self):
+#         try:
+#             self.data_validation_dir = os.path.join(common_variable.ARTIFACT,common_variable.DATA_VALIDATION)
+#             self.data_file = os.path.join(self.data_validation_dir,
+#                                           common_variable.DATA_FILE)
+#         except Exception as e :
+#             my_log.error(e)
+#             raise MyException(e,sys)
+        
+# class DataTransformationConfig:
+#     def __init__(self):
+#         try:
+#             self.yaml_path = 'params/colums.yaml'
+#             self.data_transformation_dir = os.path.join(common_variable.ARTIFACT,common_variable.DATA_TRANSFORMATION_DIR)
+#             self.transformed_train = os.path.join(self.data_transformation_dir,common_variable.TRAIN_FILE)
+#             self.transformed_test = os.path.join(self.data_transformation_dir,common_variable.TEST_FILE)
+#             self.model_file = os.path.join(common_variable.MODEL_DIR,common_variable.PREMODEL_FILE)
+            
+#         except Exception as e:
+#             my_log.error(e)
+#             raise MyException(e,sys)
+
+# class ModelTrainConfig:
+#     def __init__(self):
+#         try:
+#             self.model_thresold : float = 0.5
+#             self.prams_file : str = "params/params.yaml"
+#             self.model_file : str = os.path.join(common_variable.MODEL_DIR,common_variable.MODEL_FILE)
+#         except Exception as e:
+#             my_log.error(e)
+#             raise MyException(e,sys)
+        
+# class ModelEvaluationConfig:
+#     def __init__(self):
+#         try:
+            
+#             self.bucket_name = common_variable.BUCKET_NAME
+#             self.model_key = "models/ml_model/model.joblib"
+#             self.pre_model_key = "models/ml_model/preprocessor.joblib"
+#         except Exception as e :
+#             my_log.error(e)
+#             raise MyException(e,sys)
+
+# # my_model\preprocessor.joblib
