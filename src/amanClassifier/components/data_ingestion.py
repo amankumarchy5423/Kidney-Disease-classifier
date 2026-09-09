@@ -19,7 +19,7 @@ class DataIngestion:
             logger.info(e)
             raise e
 
-    def load_images_and_check_extensions(self):
+    def load_images_and_check_extensions(self,image_path : Path):
         try:
             pass
         except Exception as e:
@@ -39,7 +39,7 @@ class DataIngestion:
         except Exception as e:
             logger.error(f"Error converting image to array and grayscale {img_path}: {e}")
             raise e
-    def save_images_in_data_ingestion_artifact(self, img_array: np.ndarray, output_path: Path):
+    def save_images_in_data_ingestion_artifact(self, img_array: np.ndarray, data_ingestion_artifact: Path):
         try:
             pass
         except Exception as e:
@@ -49,16 +49,26 @@ class DataIngestion:
     def initiate_data_ingestion(self)->DataIngestionArtifact:
         try:
             logger.info("<____ Starting data ingestion process ____>")
-            obj_data_ingestion_config = DataIngestionConfig()
-            obj_data_ingestion = DataIngestion(config = obj_data_ingestion_config)
-            logger.info(f"Data ingestion config: {obj_data_ingestion_config.__dict__}")
+            
+            logger.info("image loading and their extension checking is started....")
+            output_path1 = self.load_images_and_check_extensions(image_path = self.config.Data_file_path)
+            logger.info("image loading and their extension checking is ended....")
 
-            loaded_images = obj_data_ingestion.load_images_and_check_extensions()
+            logger.info("image resizing starts....")
+            output_path2 = self.resize_images(image_path = output_path1,img_size = self.config.img_size)
+            logger.info("image resizing ends....")
 
-            resized_images = obj_data_ingestion.resize_images(img_path = , img_size=obj_data_ingestion_config.img_size) 
-            image_arrays = [obj_data_ingestion.convert_images_to_array_and_grayscale(img_path) for img_path in resized_images]
-            output_dir = obj_data_ingestion_config.Data_file_path
-            create_directories([output_dir])
+            logger.info("converting image to array and grayscale is starts.....")
+            output_path3 = self.convert_images_to_array_and_grayscale(img_path = output_path2)
+            logger.info("converting image to array and grayscale is ends.....")
+
+            logger.info("image is saving ....")
+            self.save_images_in_data_ingestion_artifact(img_array = output_path3,data_ingestion_artifact = self.config.output_artifact_path)
+            logger.info(f"image is saved at {self.config.output_artifact_path} ....")
+
+            return DataIngestionArtifact(data_ingestion_artifact = self.config.output_artifact_path)
+
+
 
             logger.info("<____ End data ingestion process ____>")
         except Exception as e:

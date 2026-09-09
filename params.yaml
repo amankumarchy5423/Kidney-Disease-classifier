@@ -1,0 +1,2 @@
+data_ingestion:
+  image_size : (28, 28)

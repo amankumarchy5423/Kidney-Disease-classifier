@@ -6,4 +6,4 @@ DATA_FILE_PATH = Path("Data/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
 
 # Data Ingestion related variables
 ARTIFACT_DIR = Path("artifact")
-DATA_INGESTION_DIR = Path("artifact/data_ingestion")
+DATA_INGESTION_DIR = Path("data_ingestion")

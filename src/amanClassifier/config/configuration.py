@@ -1,18 +1,20 @@
 import os
 import sys
+from pathlib import Path
 
 from src.amanClassifier.constants import *
 from src.amanClassifier.logging.logger import logger
+from src.amanClassifier.utils.common import *
 
 
-
+params = load_yaml(file_path = Path("params.yaml"))
 
 class DataIngestionConfig:
     def __init__(self):
         try:
-            self.Data_file_path = DATA_FILE_PATH
+            self.output_artifact_path = os.path.join(ARTIFACT_DIR,DATA_FILE_PATH)
             self.allowed_extensions = {".jpg", ".jpeg", ".png"}
-            self.img_size = (28, 28)
+            self.img_size = params.data_ingestion.image_size
 
         except Exception as e :
             logger.info(e)
