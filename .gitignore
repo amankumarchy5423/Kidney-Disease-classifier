@@ -2,7 +2,22 @@
 __pycache__/
 *.py[codz]
 *$py.class
+# Virtual environment
+.venv/
+# Dataset
+Data/
+research/archive/
+research/archive (2)/
+trials.ipynb
+# Python
+__pycache__/
+*.pyc
 
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
 # C extensions
 *.so
 
