@@ -12,9 +12,10 @@ params = load_yaml(file_path = Path("params.yaml"))
 class DataIngestionConfig:
     def __init__(self):
         try:
-            self.output_artifact_path = os.path.join(ARTIFACT_DIR,DATA_FILE_PATH)
+            self.output_artifact_path = os.path.join(ARTIFACT_DIR,DATA_INGESTION_DIR)
             self.allowed_extensions = {".jpg", ".jpeg", ".png"}
             self.img_size = params.data_ingestion.image_size
+            self.Data_file_path = DATA_FILE_PATH
 
         except Exception as e :
             logger.info(e)

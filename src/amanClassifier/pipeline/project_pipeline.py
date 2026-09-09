@@ -1,4 +1,4 @@
-from src.amanClassifier.logging,logger import logger
+from src.amanClassifier.logging.logger import logger
 from src.amanClassifier.components.data_ingestion import DataIngestion
 from src.amanClassifier.Artifact.project_artifact import DataIngestionArtifact
 from src.amanClassifier.config.configuration import DataIngestionConfig
@@ -7,7 +7,7 @@ from src.amanClassifier.config.configuration import DataIngestionConfig
 
 
 class ProjectPipeline:
-    def__init__(self):
+    def __init__(self):
         pass
     
     def data_prepration_pipeline(self)->DataIngestionArtifact:
@@ -19,5 +19,15 @@ class ProjectPipeline:
 
         return out_data_ingestion
 
+    def initiate_project_pipeline(self):
+        data_ingestion_output = self.data_prepration_pipeline()
 
 
+
+if __name__ == '__main__':
+    try:
+        obj_Project_pipeline = ProjectPipeline()
+        obj_Project_pipeline.initiate_project_pipeline()
+    except Exception as e :
+        logger.error("e")
+        raise e

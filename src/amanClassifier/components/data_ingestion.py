@@ -21,7 +21,9 @@ class DataIngestion:
 
     def load_images_and_check_extensions(self,image_path : Path):
         try:
-            pass
+            X = []
+            Y = []
+            for 
         except Exception as e:
             logger.error(f"Error loading data: {e}")
             raise e
@@ -55,7 +57,7 @@ class DataIngestion:
             logger.info("image loading and their extension checking is ended....")
 
             logger.info("image resizing starts....")
-            output_path2 = self.resize_images(image_path = output_path1,img_size = self.config.img_size)
+            output_path2 = self.resize_images(img_path = output_path1,img_size = self.config.img_size)
             logger.info("image resizing ends....")
 
             logger.info("converting image to array and grayscale is starts.....")
