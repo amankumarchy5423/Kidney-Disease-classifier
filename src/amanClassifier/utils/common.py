@@ -1,6 +1,6 @@
 import os
 import yaml
-from src.amanClassifier.logger import logger
+from src.amanClassifier.logging import logger
 import json
 import joblib
 from ensure import ensure_annotations
