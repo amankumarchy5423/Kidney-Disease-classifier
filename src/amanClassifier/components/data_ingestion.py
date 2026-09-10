@@ -86,11 +86,30 @@ class DataIngestion:
         except Exception as e:
             logger.error(f"Error converting image to array and grayscale {img_path}: {e}")
             raise e
-            
-    def save_images_in_data_ingestion_artifact(self, train_img : any , test_img : any):
+    
+    def split_test_into_val_and_test(self, test_img: any):
         try:
-            train_img.save(self.config.output_train_data)
-            test_img.save(self.config.output_test_data)
+            total_batches = tf.data.experimental.cardinality(test_img).numpy()
+            val_batches = int(total_batches * 0.75)
+    
+            val_data = test_img.take(val_batches)
+            test_data = test_img.skip(val_batches)
+    
+            logger.info(
+                f"Split test set -> validation batches: {val_batches}, "
+                f"test batches: {total_batches - val_batches}"
+            )
+            return val_data, test_data
+        except Exception as e:
+            logger.error(f"Error splitting test data into validation and test: {e}")
+            raise e
+            
+    def save_images_in_data_ingestion_artifact(self, train_data : any , test_data : any,val_data : any):
+        try:
+            save_image_data(img_data = train_data , filename = self.config.output_train_data)
+            save_image_data(img_data = test_data , filename = self.config.output_test_data)
+            save_image_data(img_data = val_data , filename = self.config.output_val_data)
+            
             logger.info(f"image saved at {self.config.output_artifact_path} ")
 
             
@@ -114,14 +133,19 @@ class DataIngestion:
             train_data_3 , test_data_3 = self.skip_corrupted_image_and_performance_optimization(train_img = train_data_2 , test_img = test_data_2)
             logger.info("converting image to array and grayscale is ends.....")
 
+            logger.info("splitting test data into validation and test sets....")
+            val_data, test_data_final = self.split_test_into_val_and_test(test_data_3)
+            logger.info("validation/test split complete....")
+
             logger.info("image is saving ....")
-            self.save_images_in_data_ingestion_artifact(train_img = train_data_3 , test_img = test_data_3)
+            self.save_images_in_data_ingestion_artifact(train_data = train_data_3 , test_data = test_data_final,val_data = val_data)
             logger.info(f"image is saved at {self.config.output_artifact_path} ....")
 
 
             return DataIngestionArtifact(
                 train_data_path = self.config.output_train_data , 
-                test_data_path = self.config.output_test_data
+                test_data_path = self.config.output_test_data,
+                val_data_path = self.config.val_data_path
             )
 
 

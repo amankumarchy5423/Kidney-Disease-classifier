@@ -9,3 +9,12 @@ ARTIFACT_DIR = Path("artifact")
 DATA_INGESTION_DIR = Path("data_ingestion")
 TRAIN_FILE = "train"
 TEST_FILE = "test"
+VAL_FILE = "validation"
+
+#MODEL building related directory
+MODEL_BUILDING = 'model_building'
+
+# model training 
+MODEL_TRAINING = 'model_training'
+MODEL_STUCTURE_PNG = 'model_structure.png'
+MODEL_FILE = 'model.joblib'

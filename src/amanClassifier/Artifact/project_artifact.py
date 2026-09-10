@@ -4,22 +4,19 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class DataIngestionArtifact:
-    data_ingestion_artifact : str
+    train_data_path : str
+    test_data_path : str
+    val_data_path : str
 
 @dataclass(frozen=True)
 class ModelBuildingArtifact:
-    model : any
+    tuner : any
 
-# @dataclass(frozen=True)
-# class DataTransformationArtifact:
-#     train_file : str
-#     test_file : str
-#     preprocessor_path : str
 
-# @dataclass(frozen=True)
-# class ModelTrainerArtifact:
-#     model_file : str
-#     preprocessor_file : str
+@dataclass(frozen=True)
+class ModelTrainingArtifact:
+    model_file : str
+    preprocessor_file : str
 
 # @dataclass(frozen=True)
 # class ModelEvaluatorArtifact:

@@ -1,5 +1,5 @@
 from src.amanClassifier.logging.logger import logger
-from src.amanClassifier.constants import PARAMS_FILE_PATH
+from src.amanClassifier.constants import *
 from src.amanClassifier.utils.common import read_yaml
 from src.amanClassifier.Artifact.project_artifact import (
     DataIngestionArtifact,
@@ -106,12 +106,7 @@ class ModelBuilding:
 
                 units = hp.Choice(
                     f"units_{i}",
-                    values=[
-                        64,
-                        128,
-                        256,
-                        512
-                    ]
+                    values=self.params.num_of_nodes
                 )
 
                 dropout_rate = hp.Float(
@@ -143,20 +138,12 @@ class ModelBuilding:
 
             optimizer_name = hp.Choice(
                 "optimizer",
-                values=[
-                    "adam",
-                    "nadam",
-                    "rmsprop"
-                ]
+                values=self.params.optimizers
             )
 
             learning_rate = hp.Choice(
                 "learning_rate",
-                values=[
-                    1e-3,
-                    1e-4,
-                    1e-5
-                ]
+                values=self.params.learning_rate
             )
 
             if optimizer_name == "adam":
@@ -180,7 +167,7 @@ class ModelBuilding:
             model.compile(
                 optimizer=optimizer,
 
-                loss="sparse_categorical_crossentropy",
+                loss=self.params.loss_function,
 
                 metrics=[
                     "accuracy"
@@ -201,7 +188,7 @@ class ModelBuilding:
 
             raise e
 
-    def compile_model_and_save_info_about_model(self):
+    def make_tuner_and_return(self):
 
         try:
 
@@ -222,7 +209,7 @@ class ModelBuilding:
 
                 executions_per_trial=1,
 
-                directory=self.config.root_dir,
+                directory=self.config.model_building_dir,
 
                 project_name="amanClassifier",
 
@@ -247,125 +234,16 @@ class ModelBuilding:
 
         try:
 
-            logger.info(
-                "========== MODEL BUILDING STARTED =========="
-            )
+            logger.info("========== MODEL BUILDING STARTED ==========" )
 
             tuner = (
-                self.compile_model_and_save_info_about_model()
+                self.make_tuner_and_return()
             )
 
-
-            early_stopping = EarlyStopping(
-
-                monitor="val_loss",
-
-                patience=5,
-
-                restore_best_weights=True
-            )
-
-            logger.info(
-                "EarlyStopping callback created."
-            )
-
-            # -------------------------------------------------
-            # Get training data
-            # -------------------------------------------------
-
-            train_data = self.artifact.train_data
-
-            validation_data = (
-                self.artifact.validation_data
-            )
-
-            # -------------------------------------------------
-            # Start hyperparameter search
-            # -------------------------------------------------
-
-            logger.info(
-                "Starting Keras Tuner search..."
-            )
-
-            tuner.search(
-
-                train_data,
-
-                validation_data=validation_data,
-
-                epochs=self.params.epochs,
-
-                callbacks=[
-                    early_stopping
-                ]
-            )
-
-            logger.info(
-                "Keras Tuner search completed."
-            )
-
-            # -------------------------------------------------
-            # Get best model
-            # -------------------------------------------------
-
-            best_models = tuner.get_best_models(
-                num_models=1
-            )
-
-            best_model = best_models[0]
-
-            logger.info(
-                "Best model retrieved successfully."
-            )
-
-            # -------------------------------------------------
-            # Get best hyperparameters
-            # -------------------------------------------------
-
-            best_hps = tuner.get_best_hyperparameters(
-                num_trials=1
-            )[0]
-
-            logger.info(
-                "Best hyperparameters:"
-            )
-
-            logger.info(
-                f"{best_hps.values}"
-            )
-
-            # -------------------------------------------------
-            # Save best model
-            # -------------------------------------------------
-
-            model_path = os.path.join(
-                self.config.model_path,
-                "best_model.keras"
-            )
-
-            os.makedirs(
-                self.config.model_path,
-                exist_ok=True
-            )
-
-            best_model.save(
-                model_path
-            )
-
-            logger.info(
-                f"Best model saved at: {model_path}"
-            )
-
-            logger.info(
-                "========== MODEL BUILDING COMPLETED =========="
-            )
-
-            # -------------------------------------------------
-            # Return artifact
-            # -------------------------------------------------
+            logger.info("========== MODEL BUILDING EndED ==========" )
 
             return ModelBuildingArtifact(
-                model=best_model
+                tuner=tuner
             )
 
         except Exception as e:
