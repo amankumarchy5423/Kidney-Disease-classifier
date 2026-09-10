@@ -1,6 +1,6 @@
 import os
 import yaml
-from src.amanClassifier.logging import logger
+from src.amanClassifier.logging.logger import logger
 import json
 import joblib
 from ensure import ensure_annotations
@@ -8,7 +8,23 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 import base64
+import tensorflow as tf
 
+
+@ensure_annotations
+def extract_x_y(dataset: any):
+    try:
+        x_list, y_list = [], []
+        for images, labels in dataset:
+            x_list.append(images.numpy())
+            y_list.append(labels.numpy())
+
+        x = np.concatenate(x_list, axis=0)
+        y = np.concatenate(y_list, axis=0)
+        return x, y
+    except Exception as e:
+        logger.error(f"Error extracting x, y from dataset: {e}")
+        raise e
 
 # dump model 
 @ensure_annotations
@@ -16,6 +32,7 @@ def save_binary_file(content : any , file_path : Path):
 
     joblib.dump(content,filename=file_path)
     logger.info(f"binary file saved at{file_path}")
+
 
 
 @ensure_annotations
@@ -82,16 +99,22 @@ def save_yaml(content:dict , file_path:Path):
         logger.error(e)
         raise e 
 
+@ensure_annotations
+def save_image_data(img_data, filename):
+    try:
+        dir_name = os.path.dirname(filename)
+        create_directories(dir_name)
+        img_data.save(filename)
+    except Exception as e:
+        logger.error(e)
+        raise e
 
-def decodeImage(imgstring, fileName):
-    imgdata = base64.b64decode(imgstring)
-    with open(fileName, 'wb') as f:
-        f.write(imgdata)
-        f.close()
 
-
-def encodeImageIntoBase64(croppedImagePath):
-    with open(croppedImagePath, "rb") as f:
-        return base64.b64encode(f.read())
+def load_image_data(file_path):
+    try : 
+        Data = tf.data.Dataset.load(file_path)
+    except Exception as e :
+        logger.error(e)
+        raise e
 
 
