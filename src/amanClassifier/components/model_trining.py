@@ -19,7 +19,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 
 class ModelTraining:
-    def __init__(self,config:ModelTrainingConfig,model_artifact:ModelTrainingArtifact,data_artifact:DataIngestionArtifact):
+    def __init__(self,config:ModelTrainingConfig, model_artifact:ModelTrainingArtifact, data_artifact:DataIngestionArtifact):
         self.config = config
         self.model_artifact = artifact
         self.data_artifact = data_artifact
