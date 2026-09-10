@@ -6,9 +6,9 @@ from dataclasses import dataclass
 class DataIngestionArtifact:
     data_ingestion_artifact : str
 
-# @dataclass(frozen=True)
-# class DataValidationArtifact:
-#     data_dir : str
+@dataclass(frozen=True)
+class ModelBuildingArtifact:
+    model : any
 
 # @dataclass(frozen=True)
 # class DataTransformationArtifact:

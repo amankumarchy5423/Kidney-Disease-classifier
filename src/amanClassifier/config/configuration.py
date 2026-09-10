@@ -16,20 +16,20 @@ class DataIngestionConfig:
             self.allowed_extensions = {".jpg", ".jpeg", ".png"}
             self.img_size = params.data_ingestion.image_size
             self.Data_file_path = DATA_FILE_PATH
+            self.output_train_data = os.path.join(self.output_artifact_path , TRAIN_FILE)
+            self.output_test_data = os.path.join(self.output_artifact_path , TEST_FILE)
 
         except Exception as e :
             logger.info(e)
             raise e
         
-# class DataValidationConfig:
-#     def __init__(self):
-#         try:
-#             self.data_validation_dir = os.path.join(common_variable.ARTIFACT,common_variable.DATA_VALIDATION)
-#             self.data_file = os.path.join(self.data_validation_dir,
-#                                           common_variable.DATA_FILE)
-#         except Exception as e :
-#             my_log.error(e)
-#             raise MyException(e,sys)
+class ModelBuildingConfig:
+    def __init__(self):
+        try:
+            pass
+        except Exception as e :
+            my_log.error(e)
+            raise MyException(e,sys)
         
 # class DataTransformationConfig:
 #     def __init__(self):
