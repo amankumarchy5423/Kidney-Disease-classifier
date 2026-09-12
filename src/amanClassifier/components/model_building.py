@@ -1,6 +1,6 @@
 from src.amanClassifier.logging.logger import logger
 from src.amanClassifier.constants import *
-from src.amanClassifier.utils.common import read_yaml
+from src.amanClassifier.utils.common import load_yaml
 from src.amanClassifier.Artifact.project_artifact import (
     DataIngestionArtifact,
     ModelBuildingArtifact
@@ -34,7 +34,7 @@ class ModelBuilding:
         self.config = config
         self.artifact = artifact
 
-        self.params = read_yaml(
+        self.params = load_yaml(
             PARAMS_FILE_PATH
         ).model_building
 

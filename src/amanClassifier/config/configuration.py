@@ -37,7 +37,7 @@ class ModelBuildingConfig:
             raise MyException(e,sys)
         
 
-class ModelTrainingConfig:pass
+class ModelTrainingConfig:
     def __init__(self):
         try:
             self.model_thresold : float = 0.5
