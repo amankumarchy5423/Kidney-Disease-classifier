@@ -1,8 +1,8 @@
 from src.amanClassifier.logging.logger import logger
 from src.amanClassifier.constants import PARAMS_FILE_PATH
-from src.amanClassifier.utils.common import read_yaml,save_binary_file , load_image_data,extract_x_y
-from src.amanClassifier.Artifact.project_artifact import ( ModelBuildingArtifactArtifact,ModelTrainingArtifact,DataIngestionArtifact )
-from src.amanClassifier.config.configuration import ModelBuildingConfig
+from src.amanClassifier.utils.common import load_yaml,save_binary_file , load_image_data,extract_x_y
+from src.amanClassifier.Artifact.project_artifact import ( ModelBuildingArtifact,ModelTrainingArtifact,DataIngestionArtifact )
+from src.amanClassifier.config.configuration import ModelTrainingConfig
 
 
 import os
@@ -23,7 +23,7 @@ class ModelTraining:
         self.config = config
         self.model_artifact = artifact
         self.data_artifact = data_artifact
-        self.params = read_yaml(PARAMS_FILE_PATH).model_training
+        self.params = load_yaml(PARAMS_FILE_PATH).model_training
     
     def select_best_model(self,x_train : any ,y_train : any ,x_val : any ,y_val : any):
         try:

@@ -48,7 +48,7 @@ class ProjectPipeline:
             logger.error(e)
             raise(e)
 
-    def model_training_pipeline(self,out_model_building : ModelBuildingArtifactArtifact,out_data_ingestion:DataIngestionArtifact):
+    def model_training_pipeline(self,out_model_building : ModelBuildingArtifact,out_data_ingestion:DataIngestionArtifact):
         try:
             logger.info("model training pipeline started ......")
 

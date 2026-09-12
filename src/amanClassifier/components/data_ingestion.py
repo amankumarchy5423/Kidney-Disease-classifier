@@ -24,7 +24,7 @@ class DataIngestion:
     def load_train_and_test_data(self,image_path : Path):
         try:
             train_data = image_dataset_from_directory(
-                directory = config.Data_file_path,
+                directory = self.config.Data_file_path,
                 labels = 'inferred',
                 batch_size = 32,
                 label_mode='categorical',
