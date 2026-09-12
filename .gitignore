@@ -13,6 +13,8 @@ trials.ipynb
 __pycache__/
 *.pyc
 
+.dvc/
+
 # Jupyter
 .ipynb_checkpoints/
 

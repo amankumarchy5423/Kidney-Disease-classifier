@@ -69,7 +69,8 @@ class ProjectPipeline:
             model_building_output = self.model_building_pipeline(out_data_ingestion=data_ingestion_output)
             logger.info("model building pipeline output got ")
 
-            self.model_training_pipeline()
+            self.model_training_pipeline(out_model_building = model_building_output , out_data_ingestion = data_ingestion_output)
+            logger.info("model training pipeline output got ")
         except Exception as e :
             logger.error(e)
             raise e

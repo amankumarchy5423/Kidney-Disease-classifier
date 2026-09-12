@@ -21,7 +21,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 class ModelTraining:
     def __init__(self,config:ModelTrainingConfig, model_artifact:ModelTrainingArtifact, data_artifact:DataIngestionArtifact):
         self.config = config
-        self.model_artifact = artifact
+        self.model_artifact = model_artifact
         self.data_artifact = data_artifact
         self.params = load_yaml(PARAMS_FILE_PATH).model_training
     
@@ -44,9 +44,9 @@ class ModelTraining:
                 callbacks=[early_stopping]
             )
             logger.info("Keras Tuner search completed.")
-            logger.info(f"best hyperparameter of model {
+            logger.info(f"""best hyperparameter of model {
                 tuner.get_best_hyperparameters()
-            }")
+            }""")
 
             best_model = tuner.get_best_models(
                 num_models = 1
@@ -61,7 +61,7 @@ class ModelTraining:
 
     def models_parameter_and_structure(self,best_model:any):
         try:
-            model_summary = model.summary()
+            model_summary = best_model.summary()
             logger.info(f"model summary {model_summary}")
 
             plot_model(
@@ -118,15 +118,15 @@ class ModelTraining:
         try:
             logger.info("_______ MODEL TRAINING STARTED ______")
 
-            train_data = load_image_data(self.data_artifact.train_data_path)
+            train_data = self.data_artifact.train_data
             x_train , y_train = extract_x_y(train_data)
             logger.info(f"train data is loaded and x_train : \n {x_train} and y_train \n {y_train}")
 
-            test_data = load_image_data(self.data_artifact.test_data_path)
+            test_data = self.data_artifact.test_data
             x_test , y_test = extract_x_y(test_data)
             logger.info(f"train data is loaded and x_train : \n {x_test} and y_train \n {y_test}")
 
-            val_data = load_image_data(self.data_artifact.val_data_path)
+            val_data = self.data_artifact.val_data
             x_val , y_val = extract_x_y(val_data)
             logger.info(f"train data is loaded and x_train : \n {x_val} and y_train \n {y_val}")
 

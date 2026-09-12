@@ -1,6 +1,6 @@
 from src.amanClassifier.logging.logger import logger
 from src.amanClassifier.constants import *
-from src.amanClassifier.utils.common import create_directories
+from src.amanClassifier.utils.common import create_directories , save_image_data
 from src.amanClassifier.Artifact.project_artifact import DataIngestionArtifact
 from src.amanClassifier.config.configuration import DataIngestionConfig
 
@@ -36,7 +36,7 @@ class DataIngestion:
             logger.info("training data loaded.....")
 
             test_data = image_dataset_from_directory(
-                directory = config.Data_file_path,
+                directory = self.config.Data_file_path,
                 labels = 'inferred',
                 batch_size = 32,
                 label_mode='categorical',
@@ -67,7 +67,7 @@ class DataIngestion:
 
             return train_img , test_img
         except Exception as e:
-            logger.error(f"Error resizing image {img_path}: {e}")
+            logger.error(e)
             raise e
 
     def skip_corrupted_image_and_performance_optimization(self, train_img:any , test_img:any):
@@ -84,7 +84,7 @@ class DataIngestion:
             return train_img , test_img
 
         except Exception as e:
-            logger.error(f"Error converting image to array and grayscale {img_path}: {e}")
+            logger.error(e)
             raise e
     
     def split_test_into_val_and_test(self, test_img: any):
@@ -114,7 +114,7 @@ class DataIngestion:
 
             
         except Exception as e:
-            logger.error(f"Error saving image array to {output_path}: {e}")
+            logger.error(e)
             raise e
 
     def initiate_data_ingestion(self)->DataIngestionArtifact:
@@ -138,14 +138,14 @@ class DataIngestion:
             logger.info("validation/test split complete....")
 
             logger.info("image is saving ....")
-            self.save_images_in_data_ingestion_artifact(train_data = train_data_3 , test_data = test_data_final,val_data = val_data)
+            # self.save_images_in_data_ingestion_artifact(train_data = train_data_3 , test_data = test_data_final,val_data = val_data)
             logger.info(f"image is saved at {self.config.output_artifact_path} ....")
 
 
             return DataIngestionArtifact(
-                train_data_path = self.config.output_train_data , 
-                test_data_path = self.config.output_test_data,
-                val_data_path = self.config.val_data_path
+                train_data = train_data_3 , 
+                test_data = test_data_final,
+                val_data = val_data
             )
 
 

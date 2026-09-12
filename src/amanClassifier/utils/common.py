@@ -9,10 +9,11 @@ from pathlib import Path
 from typing import Any
 import base64
 import tensorflow as tf
+import numpy as np
 
 
 @ensure_annotations
-def extract_x_y(dataset: any):
+def extract_x_y(dataset):
     try:
         x_list, y_list = [], []
         for images, labels in dataset:
@@ -103,7 +104,7 @@ def save_yaml(content:dict , file_path:Path):
 def save_image_data(img_data, filename):
     try:
         dir_name = os.path.dirname(filename)
-        create_directories(dir_name)
+        create_directories([dir_name])
         img_data.save(filename)
     except Exception as e:
         logger.error(e)

@@ -46,6 +46,7 @@ class ModelBuilding:
                 "Loading pretrained VGG16 model..."
             )
 
+            logger.info(f"model input shape {self.params.input_shape}")
             conv_base = VGG16(
                 weights=self.params.weights,
                 include_top=self.params.include_top,
@@ -141,6 +142,7 @@ class ModelBuilding:
                 values=self.params.optimizers
             )
 
+            logger.info(f"learning rante is : {self.params.learning_rate}")
             learning_rate = hp.Choice(
                 "learning_rate",
                 values=self.params.learning_rate

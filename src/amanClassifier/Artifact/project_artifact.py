@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class DataIngestionArtifact:
-    train_data_path : str
-    test_data_path : str
-    val_data_path : str
+    train_data : any
+    test_data : any
+    val_data : any
 
 @dataclass(frozen=True)
 class ModelBuildingArtifact:
