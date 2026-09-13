@@ -18,6 +18,7 @@ model_building:
 model_training:
   tunner_epochs : 5
   earlystopping_monitor : "val_loss"
-  model_train_epoch : 20
+  model_train_epoch : 10
   training_batch_size : 23
+  mlflow_tracking_uri : "http://127.0.0.1:5000"
                         

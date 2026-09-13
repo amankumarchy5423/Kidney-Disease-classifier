@@ -167,13 +167,9 @@ class ModelBuilding:
                 )
 
             model.compile(
-                optimizer=optimizer,
-
-                loss=self.params.loss_function,
-
-                metrics=[
-                    "accuracy"
-                ]
+            optimizer=optimizer,
+            loss='categorical_crossentropy',  # not sparse_categorical_crossentropy
+            metrics=['accuracy']
             )
 
             logger.info(

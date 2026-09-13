@@ -25,7 +25,7 @@ class ModelTraining:
         self.data_artifact = data_artifact
         self.params = load_yaml(PARAMS_FILE_PATH).model_training
     
-    def select_best_model(self,x_train : any ,y_train : any ,x_val : any ,y_val : any):
+    def select_best_model(self, train_data : any ,val_data : any):
         try:
             early_stopping = EarlyStopping(
                 monitor=self.params.earlystopping_monitor,
@@ -37,10 +37,9 @@ class ModelTraining:
             logger.info("Starting Keras Tuner search...")
             tuner = self.model_artifact.tuner
             tuner.search(
-                x_train,
-                y_train,
-                validation_data=(x_val , y_val),
-                epochs=self.params.tunner_epochs,
+                train_data,
+                validation_data=val_data,
+                epochs=5,
                 callbacks=[early_stopping]
             )
             logger.info("Keras Tuner search completed.")
@@ -82,29 +81,24 @@ class ModelTraining:
     def model_training(self,
                         best_model:any,
                         early_stop:any,
-                        x_train : any,
-                        y_train : any,
-                        x_val : any ,
-                        y_val : any,
-                        x_test : any,
-                        y_test : any
+                        train_data : any,
+                        val_data : any ,
+                        test_data : any
                         ):
         try:
             logger.info("model training starts....")
             best_model.fit(
-                x_train,
-                y_train,
-                epoch = self.params.model_train_epoch,
-                initial_epochs = self.params.tunner_epochs+1,
-                validation_data = (x_val , y_val),
-                batch_size = self.params.training_batch_size,
+                train_data,
+                epoch = 10,
+                initial_epochs = 6,
+                validation_data = val_data,
+                batch_size = 23,
                 verbose = 1 ,
                 callbacks = [early_stop]
             )
 
             loss , accuracy = best_model(
-                x_test , 
-                y_test
+                test_data
             )
             logger.info("loss of model : {loss} , accuracy of model {accuracy}")
 
@@ -119,22 +113,20 @@ class ModelTraining:
             logger.info("_______ MODEL TRAINING STARTED ______")
 
             train_data = self.data_artifact.train_data
-            x_train , y_train = extract_x_y(train_data)
-            logger.info(f"train data is loaded and x_train : \n {x_train} and y_train \n {y_train}")
+            # x_train , y_train = extract_x_y(train_data)
+            # logger.info(f"train data is loaded and x_train : \n {x_train} and y_train \n {y_train}")
 
             test_data = self.data_artifact.test_data
-            x_test , y_test = extract_x_y(test_data)
-            logger.info(f"train data is loaded and x_train : \n {x_test} and y_train \n {y_test}")
+            # x_test , y_test = extract_x_y(test_data)
+            # logger.info(f"train data is loaded and x_train : \n {x_test} and y_train \n {y_test}")
 
             val_data = self.data_artifact.val_data
-            x_val , y_val = extract_x_y(val_data)
-            logger.info(f"train data is loaded and x_train : \n {x_val} and y_train \n {y_val}")
+            # x_val , y_val = extract_x_y(val_data)
+            # logger.info(f"train data is loaded and x_train : \n {x_val} and y_train \n {y_val}")
 
             best_model , early_stop = self.select_best_model(
-                x_train = x_train,
-                y_train = y_train,
-                x_val = x_val,
-                y_val = y_val
+                train_data=train_data,
+                val_data=val_data
             )
 
             self.models_parameter_and_structure(best_model=best_model)
@@ -142,12 +134,9 @@ class ModelTraining:
             self.model_training(
                 best_model = best_model,
                 early_stop = early_stop,
-                x_train = x_train ,
-                y_train = y_train,
-                x_val = x_val ,
-                y_val = y_val,
-                x_test = x_test,
-                y_test = y_test
+                train_data = train_data,
+                val_data = val_data,
+                test_data = test_data
             )
             
 
