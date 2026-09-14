@@ -10,19 +10,59 @@ from src.amanClassifier.utils.common import *
 params = load_yaml(file_path = Path("params.yaml"))
 
 class DataIngestionConfig:
+
     def __init__(self):
         try:
-            self.output_artifact_path = os.path.join(ARTIFACT_DIR,DATA_INGESTION_DIR)
-            self.allowed_extensions = {".jpg", ".jpeg", ".png"}
+            self.output_artifact_path = os.path.join(
+                ARTIFACT_DIR,
+                DATA_INGESTION_DIR
+            )
+
+            self.allowed_extensions = {
+                ".jpg",
+                ".jpeg",
+                ".png"
+            }
+
             self.img_size = params.data_ingestion.image_size
+
+            self.batch_size = params.data_ingestion.batch_size
+
+            self.validation_split = (
+                params.data_ingestion.validation_split
+            )
+
+            self.validation_data_split = (
+                params.data_ingestion.validation_data_split
+            )
+
+            self.seed = params.data_ingestion.seed
+
             self.Data_file_path = DATA_FILE_PATH
-            self.output_train_data = os.path.join(self.output_artifact_path , TRAIN_FILE)
-            self.output_test_data = os.path.join(self.output_artifact_path , TEST_FILE)
-            self.output_val_data = os.path.join(self.output_artifact_path , VAL_FILE)
 
-            create_directories([self.output_artifact_path , self.output_train_data , self.output_test_data , self.output_val_data])
+            self.output_train_data = os.path.join(
+                self.output_artifact_path,
+                TRAIN_FILE
+            )
 
-        except Exception as e :
+            self.output_test_data = os.path.join(
+                self.output_artifact_path,
+                TEST_FILE
+            )
+
+            self.output_val_data = os.path.join(
+                self.output_artifact_path,
+                VAL_FILE
+            )
+
+            create_directories([
+                self.output_artifact_path,
+                self.output_train_data,
+                self.output_test_data,
+                self.output_val_data
+            ])
+
+        except Exception as e:
             logger.info(e)
             raise e
         

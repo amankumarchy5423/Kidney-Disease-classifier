@@ -1,24 +1,54 @@
 data_ingestion:
-  image_size : (256 , 256)
+  image_size: [224, 224]
+  batch_size: 32
+  validation_split: 0.2
+  validation_data_split: 0.75
+  seed: 42
+
 
 model_building:
-  weights: 'imagenet'
-  
-  input_shape: [256, 256, 3]
-  
-  include_top: False
-  
-  num_of_nodes: [64, 128, 256, 512]
-  
-  optimizers: ["adam", "nadam", "rmsprop"]
-  
-  learning_rate: [0.001, 0.0001, 0.00001]
-  
-  loss_function: "sparse_categorical_crossentropy"
+  weights: "imagenet"
+
+  input_shape: [224, 224, 3]
+
+  include_top: false
+
+  num_of_nodes: [64, 128, 256]
+
+  optimizers: ["adam", "nadam"]
+
+  learning_rate: [0.001, 0.0001]
+
+  loss_function: "categorical_crossentropy"
+
+  num_classes: 4
+
+  num_layers_min: 1
+  num_layers_max: 2
+  num_layers_step: 1
+
+  dropout_min: 0.2
+  dropout_max: 0.4
+  dropout_step: 0.1
+
+  max_trials: 3
+  executions_per_trial: 1
+
+  project_name: "amanClassifier"
+  overwrite: true
+
+
 model_training:
-  tunner_epochs : 5
-  earlystopping_monitor : "val_loss"
-  model_train_epoch : 10
-  training_batch_size : 23
-  mlflow_tracking_uri : "http://127.0.0.1:5000"
-                        
+  tunner_epochs: 3
+
+  earlystopping_monitor: "val_loss"
+
+  patience: 3
+
+  model_train_epoch: 10
+
+  mlflow_tracking_uri: "http://127.0.0.1:5000"
+
+  model_plot_dpi: 100
+
+  final_epoch : 5

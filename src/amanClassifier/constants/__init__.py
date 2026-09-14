@@ -2,7 +2,7 @@ from pathlib import Path
 
 CONFIG_FILE_PATH = Path("config/config.yaml")
 PARAMS_FILE_PATH = Path("params.yaml")
-DATA_FILE_PATH = Path("C:/Users/HP/Downloads/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
+DATA_FILE_PATH = Path("C:/Users/Public/Documents/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
 
 # Data Ingestion related variables
 ARTIFACT_DIR = Path("artifact")

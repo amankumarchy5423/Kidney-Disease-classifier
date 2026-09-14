@@ -1,5 +1,5 @@
 from src.amanClassifier.logging.logger import logger
-from src.amanClassifier.constants import *
+from src.amanClassifier.constants import PARAMS_FILE_PATH
 from src.amanClassifier.utils.common import load_yaml
 from src.amanClassifier.Artifact.project_artifact import (
     DataIngestionArtifact,
@@ -7,20 +7,15 @@ from src.amanClassifier.Artifact.project_artifact import (
 )
 from src.amanClassifier.config.configuration import ModelBuildingConfig
 
-
-import os
 import keras_tuner as kt
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.applications import VGG16
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import (
     Dense,
     Dropout,
     GlobalAveragePooling2D
 )
-from tensorflow.keras.callbacks import EarlyStopping
-
 
 
 class ModelBuilding:
@@ -38,29 +33,32 @@ class ModelBuilding:
             PARAMS_FILE_PATH
         ).model_building
 
-    def load_pretrained_vgg16_model(self):
+    def load_pretrained_model(self):
 
         try:
 
             logger.info(
-                "Loading pretrained VGG16 model..."
+                "Loading pretrained MobileNetV2 model..."
             )
 
-            logger.info(f"model input shape {self.params.input_shape}")
-            conv_base = VGG16(
+            logger.info(
+                f"model input shape {self.params.input_shape}"
+            )
+
+            conv_base = MobileNetV2(
                 weights=self.params.weights,
                 include_top=self.params.include_top,
                 input_shape=self.params.input_shape
             )
 
             logger.info(
-                "Pretrained VGG16 model loaded successfully."
+                "Pretrained MobileNetV2 model loaded successfully."
             )
 
             conv_base.trainable = False
 
             logger.info(
-                "VGG16 layers are frozen."
+                "MobileNetV2 layers are frozen."
             )
 
             return conv_base
@@ -68,7 +66,7 @@ class ModelBuilding:
         except Exception as e:
 
             logger.error(
-                f"Error while loading VGG16: {e}"
+                f"Error while loading MobileNetV2: {e}"
             )
 
             raise e
@@ -81,8 +79,7 @@ class ModelBuilding:
                 "Building model for Keras Tuner..."
             )
 
-
-            conv_base = self.load_pretrained_vgg16_model()
+            conv_base = self.load_pretrained_model()
 
             model = Sequential()
 
@@ -94,9 +91,9 @@ class ModelBuilding:
 
             num_layers = hp.Int(
                 "num_layers",
-                min_value=1,
-                max_value=3,
-                step=1
+                min_value=self.params.num_layers_min,
+                max_value=self.params.num_layers_max,
+                step=self.params.num_layers_step
             )
 
             logger.info(
@@ -112,9 +109,9 @@ class ModelBuilding:
 
                 dropout_rate = hp.Float(
                     f"dropout_{i}",
-                    min_value=0.2,
-                    max_value=0.5,
-                    step=0.1
+                    min_value=self.params.dropout_min,
+                    max_value=self.params.dropout_max,
+                    step=self.params.dropout_step
                 )
 
                 model.add(
@@ -132,7 +129,7 @@ class ModelBuilding:
 
             model.add(
                 Dense(
-                    4,
+                    self.params.num_classes,
                     activation="softmax"
                 )
             )
@@ -142,12 +139,13 @@ class ModelBuilding:
                 values=self.params.optimizers
             )
 
-            logger.info(f"learning rante is : {self.params.learning_rate}")
             learning_rate = hp.Choice(
                 "learning_rate",
                 values=self.params.learning_rate
             )
 
+
+            logger.info("model compilation start....")
             if optimizer_name == "adam":
 
                 optimizer = keras.optimizers.Adam(
@@ -167,9 +165,9 @@ class ModelBuilding:
                 )
 
             model.compile(
-            optimizer=optimizer,
-            loss='categorical_crossentropy',  # not sparse_categorical_crossentropy
-            metrics=['accuracy']
+                optimizer=optimizer,
+                loss="categorical_crossentropy",
+                metrics=["accuracy"]
             )
 
             logger.info(
@@ -203,15 +201,15 @@ class ModelBuilding:
                     direction="max"
                 ),
 
-                max_trials=10,
+                max_trials=self.params.max_trials,
 
-                executions_per_trial=1,
+                executions_per_trial=self.params.executions_per_trial,
 
                 directory=self.config.model_building_dir,
 
-                project_name="amanClassifier",
+                project_name=self.params.project_name,
 
-                overwrite=True
+                overwrite=self.params.overwrite
             )
 
             logger.info(
@@ -232,13 +230,15 @@ class ModelBuilding:
 
         try:
 
-            logger.info("========== MODEL BUILDING STARTED ==========" )
-
-            tuner = (
-                self.make_tuner_and_return()
+            logger.info(
+                "========== MODEL BUILDING STARTED =========="
             )
 
-            logger.info("========== MODEL BUILDING EndED ==========" )
+            tuner = self.make_tuner_and_return()
+
+            logger.info(
+                "========== MODEL BUILDING ENDED =========="
+            )
 
             return ModelBuildingArtifact(
                 tuner=tuner

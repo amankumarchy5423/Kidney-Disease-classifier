@@ -28,7 +28,7 @@ class DataIngestion:
                 labels = 'inferred',
                 batch_size = 32,
                 label_mode='categorical',
-                image_size = (256,256),
+                image_size = (224,224),
                 validation_split = 0.2,
                 subset = 'training',
                 seed = 42
@@ -40,7 +40,7 @@ class DataIngestion:
                 labels = 'inferred',
                 batch_size = 32,
                 label_mode='categorical',
-                image_size = (256,256),
+                image_size = (224,224),
                 validation_split = 0.2,
                 subset = 'validation',
                 seed = 42
