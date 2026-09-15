@@ -73,9 +73,8 @@ class ModelBuildingConfig:
 
             create_directories([self.model_building_dir])
         except Exception as e :
-            my_log.error(e)
-            raise MyException(e,sys)
-        
+            logger.error(e)
+            raise e
 
 class ModelTrainingConfig:
     def __init__(self):
@@ -83,12 +82,12 @@ class ModelTrainingConfig:
             self.model_thresold : float = 0.5
             self.model_training_dir : Path = os.path.join(ARTIFACT_DIR,MODEL_TRAINING)
             self.model_png : Path = os.path.join(self.model_training_dir , MODEL_STUCTURE_PNG)
-            self.model_file_path = os.path.join(self.model_training_dir , MODEL_FILE)
+            self.trained_model_file_path = os.path.join(self.model_training_dir , MODEL_FILE)
 
             create_directories([self.model_training_dir])
         except Exception as e:
-            my_log.error(e)
-            raise MyException(e,sys)
+            logger.error(e)
+            raise e
         
 # class ModelEvaluationConfig:
 #     def __init__(self):

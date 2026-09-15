@@ -51,4 +51,4 @@ model_training:
 
   model_plot_dpi: 100
 
-  final_epoch : 5
+  final_epochs : 5

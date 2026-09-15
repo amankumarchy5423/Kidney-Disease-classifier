@@ -10,7 +10,7 @@ from src.amanClassifier.config.configuration import ModelBuildingConfig
 import keras_tuner as kt
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import MobileNetV2 , VGG16
 from tensorflow.keras.layers import (
     Dense,
     Dropout,

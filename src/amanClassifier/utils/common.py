@@ -29,7 +29,7 @@ def extract_x_y(dataset):
 
 # dump model 
 @ensure_annotations
-def save_binary_file(content : any , file_path : Path):
+def save_binary_file(content , file_path : Path):
 
     joblib.dump(content,filename=file_path)
     logger.info(f"binary file saved at{file_path}")

@@ -97,14 +97,14 @@ class ModelTraining:
 
             best_model.summary()
 
-            plot_model(
-                best_model,
-                to_file=self.config.model_png,
-                show_shapes=True,
-                show_layer_names=True,
-                dpi=self.params.model_plot_dpi,
-                show_trainable=True
-            )
+            # plot_model(
+            #     best_model,
+            #     to_file=self.config.model_png,
+            #     show_shapes=True,
+            #     show_layer_names=True,
+            #     dpi=self.params.model_plot_dpi,
+            #     show_trainable=True
+            # )
 
             logger.info(
                 f"model info plotted at {self.config.model_png}"
@@ -130,28 +130,26 @@ class ModelTraining:
                 "model training starts...."
             )
 
-            # best_model.fit(
-            #     train_data,
-            #     epochs=self.params.final_epochs,
-            #     validation_data=val_data,
-            #     verbose=1,
-            #     callbacks=[early_stop]
+            best_model.fit(
+                train_data,
+                epochs=5,
+                validation_data=val_data,
+                verbose=1,
+                callbacks=[early_stop]
+            )
+            logger.info("model trained sucessfully.....")
+
+            # loss, accuracy = best_model.evaluate(
+            #     test_data,
+            #     verbose=1
             # )
 
-            loss, accuracy = best_model.evaluate(
-                test_data,
-                verbose=1
-            )
+            # logger.info(
+            #     f"loss of model: {loss:.4f}, "
+            #     f"accuracy of model: {accuracy:.4f}"
+            # )
 
-            logger.info(
-                f"loss of model: {loss:.4f}, "
-                f"accuracy of model: {accuracy:.4f}"
-            )
-
-            save_binary_file(
-                content=best_model,
-                file_path=self.config.model_file_path
-            )
+            best_model.save('artifact/model_training/model.keras')
 
             logger.info(
                 "model saved successfully."

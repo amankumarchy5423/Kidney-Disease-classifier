@@ -17,4 +17,4 @@ MODEL_BUILDING = 'model_building'
 # model training 
 MODEL_TRAINING = 'model_training'
 MODEL_STUCTURE_PNG = 'model_structure.png'
-MODEL_FILE = 'model.joblib'
+MODEL_FILE = "model.keras"

@@ -12,7 +12,7 @@ trials.ipynb
 # Python
 __pycache__/
 *.pyc
-
+artifact/
 .dvc/
 
 # Jupyter
