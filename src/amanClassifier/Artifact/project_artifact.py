@@ -15,8 +15,8 @@ class ModelBuildingArtifact:
 
 @dataclass(frozen=True)
 class ModelTrainingArtifact:
-    model_file : str
-    preprocessor_file : str
+    model_file_path : str
+    history : list
 
 # @dataclass(frozen=True)
 # class ModelEvaluatorArtifact:

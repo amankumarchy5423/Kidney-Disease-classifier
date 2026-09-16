@@ -154,11 +154,13 @@ class ModelTraining:
                 f"accuracy of model: {history.history["accuracy"][-1]:.4f}"
             )
 
-            best_model.save('artifact/model_training/model.keras')
+            best_model.save(self.config.trained_model_file_path)
 
             logger.info(
                 "model saved successfully."
             )
+
+            return history
 
         except Exception as e:
 
@@ -186,12 +188,17 @@ class ModelTraining:
                 best_model=best_model
             )
 
-            self.model_training(
+            history = self.model_training(
                 best_model=best_model,
                 early_stop=early_stop,
                 train_data=train_data,
                 val_data=val_data,
                 test_data=test_data
+            )
+
+            return ModelTrainingArtifact(
+                model_file_path=self.config.trained_model_file_path,
+                history=history
             )
 
             logger.info(
