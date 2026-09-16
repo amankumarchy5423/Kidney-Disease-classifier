@@ -14,6 +14,8 @@ from src.amanClassifier.config.configuration import ModelTrainingConfig
 import keras_tuner as kt
 from tensorflow.keras.callbacks import EarlyStopping
 from keras.utils import plot_model
+import mlflow
+import mlflow.keras
 
 
 class ModelTraining:
@@ -130,7 +132,7 @@ class ModelTraining:
                 "model training starts...."
             )
 
-            best_model.fit(
+            history = best_model.fit(
                 train_data,
                 epochs=5,
                 validation_data=val_data,
@@ -139,15 +141,18 @@ class ModelTraining:
             )
             logger.info("model trained sucessfully.....")
 
-            # loss, accuracy = best_model.evaluate(
-            #     test_data,
-            #     verbose=1
-            # )
+            mlflow.log_metric("accuracy", history.history["accuracy"][-1])
+            mlflow.log_metric("val_accuracy", history.history["val_accuracy"][-1])
+            mlflow.log_metric("loss", history.history["loss"][-1])
+            mlflow.log_metric("val_loss", history.history["val_loss"][-1])
 
-            # logger.info(
-            #     f"loss of model: {loss:.4f}, "
-            #     f"accuracy of model: {accuracy:.4f}"
-            # )
+            mlflow.keras.log_model(model=best_model,name='kidney_classifier')
+
+
+            logger.info(
+                f"loss of model: {history.history["loss"][-1]:.4f}, "
+                f"accuracy of model: {history.history["accuracy"][-1]:.4f}"
+            )
 
             best_model.save('artifact/model_training/model.keras')
 
