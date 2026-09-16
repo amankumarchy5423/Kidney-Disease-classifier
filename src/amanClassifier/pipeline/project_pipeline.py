@@ -68,9 +68,6 @@ class ProjectPipeline:
 
                 self.model_training_pipeline(out_model_building=model_building_output, out_data_ingestion=data_ingestion_output)
                 logger.info("model training pipeline output got ")
-
-                mlflow.end_run()
-                
         except Exception as e:
             logger.error(e)
             raise e

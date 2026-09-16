@@ -9,13 +9,13 @@ Data/
 research/archive/
 research/archive (2)/
 trials.ipynb
-mlflow.db
-mlartifacts/
 # Python
 __pycache__/
 *.pyc
 artifact/
 .dvc/
+mlartifacts/
+mlflow.db
 # Jupyter
 .ipynb_checkpoints/
 
