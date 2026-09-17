@@ -1,8 +1,8 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from tensorflow import keras
-from PIL import Image
-import numpy as np
-
+from fastapi.responses import JSONResponse
+from model.predict import MLFLOW_MODEL_VERSION , predict_output
+from schema.user_input import UserInput
+from schema.output_schema import OutputSchema
 
 app = FastAPI(
     title="Kidney Disease Classifier API",
@@ -10,71 +10,35 @@ app = FastAPI(
 )
 
 
-MODEL_PATH = "artifact/model_training/model.keras"
-
-model = keras.models.load_model(MODEL_PATH)
-
-
-CLASS_NAMES = [
-    "Cyst",
-    "Normal",
-    "Stone",
-    "Tumor"
-]
 
 
 @app.get("/health")
 def health():
     return {
-        "status": "healthy"
+        "status": "healthy",
+        "version" : MLFLOW_MODEL_VERSION
     }
 
 
-@app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+@app.post("/predict",response_model=OutputSchema)
+def predict(file:UploadFile):
 
     try:
-
         if file.content_type not in [
-            "image/jpeg",
-            "image/png",
-            "image/jpg"
-        ]:
-            raise HTTPException(
-                status_code=400,
-                detail="Only JPG and PNG images are supported."
-            )
+                   "image/jpeg",
+                   "image/png",
+                   "image/jpg"
+               ]:
+                   raise HTTPException(
+                       status_code=400,
+                       detail="Only JPG and PNG images are supported."
+                   )
+        confidence , predicted_class = predict_output(input=file.file)
 
-        image = Image.open(file.file).convert("RGB")
-
-        image = image.resize((224, 224))
-
-        image = np.array(image, dtype=np.float32)
-
-        image = image / 255.0
-
-        image = np.expand_dims(image, axis=0)
-
-        prediction = model.predict(image)
-
-        predicted_index = int(
-            np.argmax(prediction[0])
-        )
-
-        confidence = float(
-            prediction[0][predicted_index]
-        )
-
-        predicted_class = CLASS_NAMES[
-            predicted_index
-        ]
-
-        return {
+        return JSONResponse(status_code=200,content= {
             "prediction": predicted_class,
             "confidence": confidence
-        }
-
-    
+        })
 
     except Exception as e:
 
