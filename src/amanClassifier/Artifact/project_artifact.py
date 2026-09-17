@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from keras import Model
 
 
 
@@ -15,7 +16,7 @@ class ModelBuildingArtifact:
 
 @dataclass(frozen=True)
 class ModelTrainingArtifact:
-    model_file_path : str
+    best_model : Model
     history : list
 
 # @dataclass(frozen=True)

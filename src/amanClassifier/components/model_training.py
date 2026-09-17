@@ -146,7 +146,7 @@ class ModelTraining:
             mlflow.log_metric("loss", history.history["loss"][-1])
             mlflow.log_metric("val_loss", history.history["val_loss"][-1])
 
-            mlflow.keras.log_model(model=best_model,name='kidney_classifier')
+            # mlflow.keras.log_model(model=best_model,name='kidney_classifier')
 
 
             logger.info(
@@ -154,13 +154,13 @@ class ModelTraining:
                 f"accuracy of model: {history.history["accuracy"][-1]:.4f}"
             )
 
-            best_model.save(self.config.trained_model_file_path)
+            # best_model.save(self.config.trained_model_file_path)
 
             logger.info(
                 "model saved successfully."
             )
 
-            return history
+            return history , best_model
 
         except Exception as e:
 
@@ -188,7 +188,7 @@ class ModelTraining:
                 best_model=best_model
             )
 
-            history = self.model_training(
+            history , best_model = self.model_training(
                 best_model=best_model,
                 early_stop=early_stop,
                 train_data=train_data,
@@ -197,7 +197,7 @@ class ModelTraining:
             )
 
             return ModelTrainingArtifact(
-                model_file_path=self.config.trained_model_file_path,
+                best_model=best_model,
                 history=history
             )
 

@@ -92,10 +92,10 @@ class ModelTrainingConfig:
 class ModelEvaluationConfig:
     def __init__(self):
         try:
-            
-            
-            self.model_key = "models/ml_model/model.joblib"
-            self.pre_model_key = "models/ml_model/preprocessor.joblib"
+            self.model_dir = os.path.join(ARTIFACT_DIR,MODEL_DIR)
+            self.production_path = os.path.join(self.model_dir,PRODUCTION_MODEL)
+                
+            create_directories([self.model_dir])
         except Exception as e :
             logger.error(e)
             raise e

@@ -18,3 +18,7 @@ MODEL_BUILDING = 'model_building'
 MODEL_TRAINING = 'model_training'
 MODEL_STUCTURE_PNG = 'model_structure.png'
 MODEL_FILE = "model.keras"
+
+#MODEL EVALUATION 
+PRODUCTION_MODEL = "production_kidney_classifier_model.keras"
+MODEL_DIR = 'Model'
