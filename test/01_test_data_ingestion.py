@@ -39,3 +39,4 @@ def test_split_test_into_val_and_test():
     ).numpy()
 
     assert val_batches + test_batches == 10
+    
