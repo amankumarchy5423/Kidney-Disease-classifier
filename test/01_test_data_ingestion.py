@@ -2,6 +2,7 @@ from src.amanClassifier.logging.logger import logger
 from src.amanClassifier.components.data_ingestion import DataIngestion
 import tensorflow as tf
 import pytest
+import os
 
 
 
@@ -9,18 +10,10 @@ def test_split_test_into_val_and_test():
 
     data_ingestion = DataIngestion.__new__(DataIngestion)
 
-    images = tf.random.uniform(
-        (100, 224, 224, 3)
-    )
+    images = os.listdir("test_data/Normal")[0]
 
-    labels = tf.one_hot(
-        tf.random.uniform(
-            (100,),
-            maxval=4,
-            dtype=tf.int32
-        ),
-        depth=4
-    )
+    labels = os.path.dirname("test_data/Normal")
+    
 
     dataset = tf.data.Dataset.from_tensor_slices(
         (images, labels)
