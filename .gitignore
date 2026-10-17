@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+fastapi/model/production_kidney_classifier_model.keras
+
+
 __pycache__/
 *.py[codz]
 *$py.class

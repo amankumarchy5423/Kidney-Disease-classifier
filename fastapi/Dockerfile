@@ -1,12 +1,12 @@
-FROM python:3.10-bookworm
+FROM python:3.12-bookworm
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Copy the app and default model
-COPY app /app
 WORKDIR /app
 
-# Run the FastAPI app
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+# Install dependencies
+COPY fastapi-requirements.txt .
+RUN pip install --no-cache-dir -r fastapi-requirements.txt
+
+COPY . .
+
+# Run the FastAPI app (App/app.py -> App.app)
+CMD ["uvicorn", "App.app:app", "--host", "0.0.0.0", "--port", "8080"]

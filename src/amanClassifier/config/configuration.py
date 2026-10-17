@@ -92,7 +92,7 @@ class ModelTrainingConfig:
 class ModelEvaluationConfig:
     def __init__(self):
         try:
-            self.model_dir = os.path.join(ARTIFACT_DIR,MODEL_DIR)
+            self.model_dir = os.path.join(FASTAPI_DIR,MODEL_DIR)
             self.production_path = os.path.join(self.model_dir,PRODUCTION_MODEL)
                 
             create_directories([self.model_dir])

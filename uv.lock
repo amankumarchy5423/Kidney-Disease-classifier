@@ -1541,6 +1541,11 @@ dependencies = [
     { name = "zipp" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "absl-py", specifier = "==2.5.0" },
@@ -1696,6 +1701,9 @@ requires-dist = [
     { name = "yarl", specifier = "==1.24.5" },
     { name = "zipp", specifier = "==4.1.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.1.1" }]
 
 [[package]]
 name = "kiwisolver"

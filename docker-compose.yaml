@@ -1,0 +1,30 @@
+
+services:
+  backend:
+    build: ./fastapi
+    image: amanmlops/kidney-backend:latest
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
+
+  frontend:
+    build: .
+    image: amanmlops/kidney-frontend:latest
+    ports:
+      - "5000:5000"
+    environment:
+      FASTAPI_URL: http://backend:8080
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

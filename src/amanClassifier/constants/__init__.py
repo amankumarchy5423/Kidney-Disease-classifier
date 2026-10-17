@@ -2,7 +2,7 @@ from pathlib import Path
 
 CONFIG_FILE_PATH = Path("config/config.yaml")
 PARAMS_FILE_PATH = Path("params.yaml")
-DATA_FILE_PATH = Path("C:/Users/Public/Documents/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
+DATA_FILE_PATH = Path(r"C:\Users\HP\Downloads\CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone")
 
 # Data Ingestion related variables
 ARTIFACT_DIR = Path("artifact")
@@ -21,4 +21,5 @@ MODEL_FILE = "model.keras"
 
 #MODEL EVALUATION 
 PRODUCTION_MODEL = "production_kidney_classifier_model.keras"
+FASTAPI_DIR = 'fastapi'
 MODEL_DIR = 'Model'

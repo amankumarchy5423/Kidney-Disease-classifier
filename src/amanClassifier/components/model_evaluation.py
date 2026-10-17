@@ -17,11 +17,18 @@ class ModelEvaluation:
     def __init__(self,config : ModelEvaluationConfig , artifact : ModelTrainingArtifact):
         self.config = config
         self.artifact = artifact
-        self.params = load_yaml('params.yaml').model_evaluation
-        self.client = MlflowClient()
+        self.params = load_yaml(
+                    PARAMS_FILE_PATH
+                ).model_evaluation
+        self.client = MlflowClient(tracking_uri=self.params.mlflow_tracking_uri)
 
     def check_model_accuracy(self,history):
         try:
+            logger.info(f'''my criteria for  accuracy {self.params.at_least_training_accuracy}
+                         and the actual accuracy {history["accuracy"][-1]}''')
+            logger.info(f'''my criteria for  validation accuracy {self.params.at_least_val_accuracy}
+                         and the actual accuracy {history["val_accuracy"][-1]}''')
+            
             accuracy_report = False
             if (self.params.at_least_training_accuracy <= history["accuracy"][-1] and 
             self.params.at_least_val_accuracy <= history['val_accuracy'][-1]):
@@ -36,6 +43,11 @@ class ModelEvaluation:
 
     def check_model_loss(self,history):
         try:
+            logger.info(f'''my criteria for validation loss {self.params.at_most_val_loss}
+                         and the actual validation loss {history["val_loss"][-1]}''')
+            logger.info(f'''my criteria for  loss {self.params.at_most_training_loss}
+                         and the actual validation loss {history["loss"][-1]}''')
+            
             loss_report = False
             if (self.params.at_most_val_loss >= history["val_loss"][-1] and 
                 self.params.at_most_training_loss >= history["loss"][-1]):
@@ -52,6 +64,7 @@ class ModelEvaluation:
     def send_model_into_production(self,accuracy_report,loss_report):
 
         try:
+            logger.info(f"accuracy report of model is {accuracy_report} and loss report of model is {loss_report}")
     
             if not accuracy_report or not loss_report:
     
@@ -72,10 +85,10 @@ class ModelEvaluation:
             
     
            
-            Path("model").mkdir(
-                parents=True,
-                exist_ok=True
-            )
+            # Path("model").mkdir(
+            #     parents=True,
+            #     exist_ok=True
+            # )
     
             model.save(self.config.production_path)
     

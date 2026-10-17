@@ -54,6 +54,7 @@ model_training:
   final_epochs : 5
 
 model_evaluation:
+  mlflow_tracking_uri: "http://127.0.0.1:5000"
   at_most_val_loss : 2.0
   at_most_training_loss : 2.0
   at_least_training_accuracy : 8.0

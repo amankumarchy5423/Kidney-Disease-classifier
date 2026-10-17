@@ -12,6 +12,10 @@ from src.amanClassifier.config.configuration import ModelBuildingConfig
 
 from src.amanClassifier.components.model_training import ModelTraining
 from src.amanClassifier.config.configuration import ModelTrainingConfig
+from src.amanClassifier.Artifact.project_artifact import ModelTrainingArtifact
+
+from src.amanClassifier.components.model_evaluation import ModelEvaluation
+from src.amanClassifier.config.configuration import ModelEvaluationConfig
 
 import mlflow
 
@@ -51,10 +55,24 @@ class ProjectPipeline:
             logger.info("model training pipeline started ......")
             obj_model_training_config = ModelTrainingConfig()
             obj_model_training = ModelTraining(config=obj_model_training_config, model_artifact=out_model_building, data_artifact=out_data_ingestion)
-            obj_model_training.initiate_model_training()
+            out_model_training = obj_model_training.initiate_model_training()
+            return out_model_training
             logger.info("model training pipeline ended ......")
         except Exception as e:
             logger.error(e)
+            raise e
+
+    def model_evaluation_pipeline(self,out_model_training:ModelTrainingArtifact):
+        try:
+            logger.info("model eveluation pipeline function started....")
+
+            obj_model_evaluation_config = ModelEvaluationConfig()
+            obj_model_evaluation = ModelEvaluation(config=obj_model_evaluation_config,artifact=out_model_training)
+            obj_model_evaluation.initiate_model_evaluation()
+            
+            logger.info("model eveluation pipeline function ended....")
+        except Exception as e:
+            logger.exception(e)
             raise e
 
     def initiate_project_pipeline(self):
@@ -66,8 +84,11 @@ class ProjectPipeline:
                 model_building_output = self.model_building_pipeline(out_data_ingestion=data_ingestion_output)
                 logger.info("model building pipeline output got ")
 
-                self.model_training_pipeline(out_model_building=model_building_output, out_data_ingestion=data_ingestion_output)
+                model_training_output = self.model_training_pipeline(out_model_building=model_building_output, out_data_ingestion=data_ingestion_output)
                 logger.info("model training pipeline output got ")
+
+                self.model_evaluation_pipeline(out_model_training=model_training_output)
+                logger.info("model evaluation pipeline ended")
 
                 mlflow.end_run()
                 

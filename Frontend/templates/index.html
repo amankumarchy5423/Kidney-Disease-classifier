@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kidney CT Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="brand">Renal Imaging Lab</span>
+      <nav aria-label="Page sections">
+        <a href="#analyse">Analyse</a>
+        <a href="#how">How it works</a>
+        <a href="#classes">Classes</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <p class="eyebrow">Deep learning for kidney CT</p>
+    <h1>Kidney CT Classifier</h1>
+    <div class="ornament" aria-hidden="true"><span></span><i>&#9670;</i><span></span></div>
+    <p class="lead">
+      Upload a kidney CT slice and the model will tell you whether the scan looks
+      normal or shows a cyst, a stone or a tumor.
+    </p>
+  </header>
+
+  <!-- Analyse -->
+  <main class="workspace" id="analyse">
+
+    <section class="card" aria-labelledby="upload-title">
+      <p class="card-tag">Step 1</p>
+      <h2 id="upload-title">Upload a CT image</h2>
+
+      <form method="POST" action="/" enctype="multipart/form-data">
+        <label for="image-input" class="field-label">PNG or JPG, up to 8 MB</label>
+        <input type="file" id="image-input" name="image" accept="image/png,image/jpeg" required>
+        <button type="submit">Analyse image</button>
+      </form>
+
+      {% if image_data %}
+        <figure class="plate">
+          <img src="{{ image_data }}" alt="Uploaded CT scan">
+          <figcaption>Fig. 1 &mdash; Uploaded scan</figcaption>
+        </figure>
+      {% endif %}
+    </section>
+
+    <section class="card" aria-labelledby="result-title" aria-live="polite">
+      <p class="card-tag">Step 2</p>
+      <h2 id="result-title">Result</h2>
+
+      {% set notes = {
+        'Normal': 'No cyst, stone or tumor pattern was detected in this scan.',
+        'Cyst':   'The scan resembles a fluid-filled sac in the kidney.',
+        'Stone':  'The scan resembles a hard mineral deposit in the kidney.',
+        'Tumor':  'The scan resembles an abnormal mass of tissue in the kidney.'
+      } %}
+
+      {% if error %}
+        <div class="error" role="alert">{{ error }}</div>
+
+      {% elif result %}
+        <p class="verdict-label">Predicted class</p>
+        <p class="verdict {{ result.label }}">{{ result.label }}</p>
+        <p class="verdict-note">{{ notes.get(result.label, '') }}</p>
+
+        <div class="meter-head">
+          <span>Confidence</span>
+          <strong>{{ result.confidence }}%</strong>
+        </div>
+        <div class="meter" role="img" aria-label="Confidence {{ result.confidence }} percent">
+          <div class="meter-fill {{ result.label }}" style="width: {{ result.confidence }}%"></div>
+        </div>
+
+        <p class="advice">
+          Please share this result with a qualified doctor. It is not a diagnosis.
+        </p>
+
+      {% else %}
+        <div class="placeholder">
+          <div class="placeholder-mark" aria-hidden="true">&#9670;</div>
+          <p>No result yet.<br>Choose an image and select <em>Analyse image</em>.</p>
+        </div>
+      {% endif %}
+    </section>
+  </main>
+
+  <!-- How it works -->
+  <section class="band" id="how">
+    <div class="band-inner">
+      <h2 class="section-title">How it works</h2>
+      <ol class="steps">
+        <li>
+          <h3>Upload</h3>
+          <p>Choose a kidney CT slice saved as a PNG or JPG file.</p>
+        </li>
+        <li>
+          <h3>Analyse</h3>
+          <p>A trained neural network examines the image and scores each possible class.</p>
+        </li>
+        <li>
+          <h3>Review</h3>
+          <p>You see the most likely class and how confident the model is about it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Classes -->
+  <section class="classes" id="classes">
+    <h2 class="section-title">What the model looks for</h2>
+    <div class="class-grid">
+      <article class="class-card c-normal">
+        <h3>Normal</h3>
+        <p>A healthy kidney with no visible abnormal structure.</p>
+      </article>
+      <article class="class-card c-cyst">
+        <h3>Cyst</h3>
+        <p>A round, fluid-filled sac. Most are harmless but some need follow-up.</p>
+      </article>
+      <article class="class-card c-stone">
+        <h3>Stone</h3>
+        <p>A hard deposit of minerals and salts that can block the flow of urine.</p>
+      </article>
+      <article class="class-card c-tumor">
+        <h3>Tumor</h3>
+        <p>An abnormal growth of tissue that a doctor must examine further.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="ornament small" aria-hidden="true"><span></span><i>&#9670;</i><span></span></div>
+    <p>
+      For learning and research only. This tool does not replace a diagnosis
+      from a doctor.
+    </p>
+  </footer>
+
+</body>
+</html>
